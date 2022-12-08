@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Chatbot</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-black flex flex-col flex-1 items-center justify-center h-screen">
+    <h1 class="sm:text-center text-purple-500">AI Chatbot</h1>
+    <form id="chatbot-form" class="border-purple-500 bg-transparent rounded w-1/3">
+        <label for="message">Message:</label><br>
+        <input type="text" id="message" name="message" class="inline-block w-full rounded border-3 border-purple-500 border-gradient-to-r"><br>
+        <input type="submit" value="Submit" class="inline-block bg-purple-500 border-red-500 transform hover:scale-110 rounded cursor-pointer px-2 py-2 my-2">
+    </form> 
+    <div class="flex justify-center w-96">
+        <div id="chatbot-response" class="text-white rounded max-w-50 w-96 py-2"></div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var colors = ['red', 'orange', 'yellow', 'green', 'blue', 'indigo', 'violet'];
+        var colorIndex = 0;
+        
+        $(document).ready(function() {
+            setInterval(function() {
+                $("#chatbot-form").css('border-color', colors[colorIndex]);
+                colorIndex = (colorIndex + 1) % colors.length;
+            }, 1000);
+
+            $("#chatbot-form").submit(function(e) {
+                e.preventDefault();
+                var userMessage = $("#message").val();
+                $.ajax({
+                    type: "POST",
+                    url: "/chatbot",
+                    data: JSON.stringify({message: userMessage}),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function(response) {
+                        $("#chatbot-response").text(response.response);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
